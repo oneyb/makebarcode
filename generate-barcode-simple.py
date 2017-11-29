@@ -143,7 +143,7 @@ def main():
     # Set important variables
     encoder = ENCODER_FUNCTIONS.get(args.barcode)
     if encoder is None:
-        print('\nAccepted encoders:\n')
+        print('\nStopping here.\nAccepted encoders are:\n')
         import sys; sys.stdout.write('\t' + '\n\t'.join(ENCODER_FUNCTIONS.keys()) + '\n\n')
         raise NameError, "{0} not an accepted barcode encoder".format(args.barcode)
 
@@ -157,11 +157,13 @@ def main():
         locals().update(recipe)
         codes = eval(args.codes)
     except:
+        from warnings import warn
+        warn("The ID to be encoded is not python code. Assuming it's a unique string.", Warning)
         codes = [args.codes
-                 for c in range(recipe.get('no_labels_y') *
+                 for x in range(recipe.get('no_labels_y') *
                                 recipe.get('no_labels_x'))]
 
-    import pdb; pdb.set_trace
+    # import pdb; pdb.set_trace
 
     # make the pdf
     pdf = BarcodeCanvas(args.filename,
