@@ -1,0 +1,31 @@
+* Recipes to print labels with barcodes using the great [[http://www.reportlab.com/software/opensource/][reportlab]] python module.
+
+I am a little amazed that I can't find work from someone who has developed a
+simple database of label metrics. That is Avery, Herma, etc. make and sell
+blank label forms, for which a pdf can be created in order to print onto the
+blank label forms. My needs are minimal but hopefully someone will tell me where to find all of these metrics or that someone has a similar open source software package.
+
+* Usage
+For now, I use this simple python module as such:
+
+#+BEGIN_SRC shell
+python generate-barcode-simple.py --barcode Code128 --recipe avery_3475 --filename barcodes.pdf --codes '["Box{:=04}".format(i) for i in range(no_labels_x * no_labels_y + 1)[1:]]'
+#+END_SRC
+
+List available =recipes=:
+#+BEGIN_SRC shell
+generate-barcode-simple.py --list-recipes
+#+END_SRC
+
+
+** TODO Implement the following functionality:
+   - [ ] better positioning of text below =code=
+   - [ ] different paper sizes than A4, which depend on =sheet=
+   - [ ] Complete command line options
+
+
+* Contributions, please
+
+My ability to design software is underdeveloped and correlates with my
+needs. Please fork this repository or contribute metrics, if you find it
+useful. My previous self would appreciate it.
