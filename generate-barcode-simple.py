@@ -5,10 +5,15 @@
 Create barcodes and embed in a PDF
 """
 
-from recipe_database import SCANNER
+from reportlab.lib.units import mm
+
+# Scanner bar width tolerance from reportlab.graphics.barcode.code128.py
+# i.e. reportlab/graphics/barcode/code128.py
+SCANNER = {
+    'tolerance' : 0.19 * mm
+}
 
 from reportlab.pdfgen import canvas
-
 
 
 def find_dims_simple(code, label_width, label_height, encoder,
@@ -133,7 +138,7 @@ def main():
     import reportlab.lib.pagesizes
 
     # import recipes
-    from recipe_database import SCANNER, ENCODER_FUNCTIONS
+    from recipe_database import ENCODER_FUNCTIONS
     from recipe_database import DATABASE as DB
     
     # Set important variables

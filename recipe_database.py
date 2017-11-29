@@ -1,12 +1,6 @@
 from reportlab.lib.units import mm
 from reportlab.graphics import barcode
 
-SCANNER = {
-    # Scanner bar width tolerance from reportlab.graphics.barcode.code128.py
-    # i.e. reportlab/graphics/barcode/code128.py
-    'tolerance' : .19 * mm
-}
-
 DATABASE = {
     # Herma 4474
     'herma_4474':        { 
