@@ -1,15 +1,20 @@
-* Recipes to print labels with barcodes using the great [[http://www.reportlab.com/software/opensource/][reportlab]] python module.
+* Recipes to print barcode labels using [[http://www.reportlab.com/software/opensource/][reportlab]] 
 
-I am a little amazed that I can't find work from someone who has developed a
-simple database of label metrics. That is Avery, Herma, etc. make and sell
-blank label forms, for which a pdf can be created in order to print onto the
-blank label forms. My needs are minimal but hopefully someone will tell me where to find all of these metrics or that someone has a similar open source software package.
+I am a little amazed that I can't find a simple database of label metrics to
+make PDFs for printing. That is Avery, Herma, etc. make and sell blank label
+forms, for which a PDF can be created in order to print onto the blank label
+forms. How do people do inventory managment with open source software?
+
+My needs are minimal but hopefully someone will tell me where to find
+all of these metrics or that someone has a similar open source software
+package. For now, I will publish this poor code.
 
 * Usage
 For now, I use this simple python module as such:
 
 #+BEGIN_SRC shell
-python generate-barcode-simple.py --barcode Code128 --recipe avery_3475 --filename barcodes.pdf --codes '["Box{:=04}".format(i) for i in range(no_labels_x * no_labels_y + 1)[1:]]'
+python generate-barcode-simple.py --barcode Code128 --recipe avery_3475 --filename barcodes.pdf \ 
+       --codes '["Box{:=04}".format(i) for i in range(no_labels_x * no_labels_y + 1)[1:]]'
 #+END_SRC
 
 List available =recipes=:
@@ -20,8 +25,10 @@ generate-barcode-simple.py --list-recipes
 
 ** TODO Implement the following functionality:
    - [ ] better positioning of text below =code=
-   - [ ] different paper sizes than A4, which depend on =sheet=
+   - [X] different paper sizes than A4, which depend on =recipe=
    - [ ] Complete command line options
+   - [ ] Allow linking to inventory to rely on pool
+   - [ ] implement tests
 
 
 * Contributions, please
