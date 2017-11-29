@@ -5,19 +5,13 @@
 Create barcodes and embed in a PDF
 """
 
+
 from reportlab.lib.units import mm
-
-# Scanner bar width tolerance from reportlab.graphics.barcode.code128.py
-# i.e. reportlab/graphics/barcode/code128.py
-SCANNER = {
-    'tolerance' : 0.19 * mm
-}
-
 from reportlab.pdfgen import canvas
 
 
 def find_dims_simple(code, label_width, label_height, encoder,
-                     tolerance=SCANNER.get('tolerance')):
+                     tolerance=0.19 * mm):
     barWidth, barHeight = label_width * 0.9, label_height 
     while True:
         encoded = encoder(code, barWidth=barWidth)
@@ -44,7 +38,7 @@ def find_dims_simple(code, label_width, label_height, encoder,
     return barWidth, barHeight
 
 def find_dims(code, label_width, label_height, encoder,
-              tolerance=SCANNER.get('tolerance')):
+              tolerance=0.19 * mm):
     """Better way of finding dimensions of barcode"""
 
     encoded = encoder(code)
@@ -118,11 +112,11 @@ def main():
     import importlib
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--codes', default='0001')
-    parser.add_argument('-f', '--filename', default='barcodes')
-    parser.add_argument('-r', '--recipe', default='avery_3475')
-    parser.add_argument('-b', '--barcode', default='code128')
-    parser.add_argument('-l', '--list-recipes', dest='lr',
+    parser.add_argument('-c', '--codes',        default='0001')
+    parser.add_argument('-f', '--filename',     default='barcodes')
+    parser.add_argument('-r', '--recipe',       default='avery_3475')
+    parser.add_argument('-b', '--barcode',      default='code128')
+    parser.add_argument('-l', '--list-recipes', dest='lr', 
                         action='store_true', default=True)
     args = parser.parse_args()
 
@@ -140,6 +134,11 @@ def main():
     # import recipes
     from recipe_database import ENCODER_FUNCTIONS
     from recipe_database import DATABASE as DB
+    # Scanner bar width tolerance from reportlab.graphics.barcode.code128.py
+    # i.e. reportlab/graphics/barcode/code128.py
+    # SCANNER = {
+    #     'tolerance' : 0.19 * mm
+    # }
     
     # Set important variables
     encoder = ENCODER_FUNCTIONS.get(args.barcode)
