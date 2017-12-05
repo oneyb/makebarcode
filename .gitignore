@@ -1,4 +1,5 @@
 # PDFs
+*.png
 *.pdf
 *.PDF
 # Byte-compiled / optimized / DLL files
