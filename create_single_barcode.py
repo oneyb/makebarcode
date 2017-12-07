@@ -5,6 +5,11 @@
 Create single barcode
 """
 
+# # TODO: different output formats
+# from reportlab.graphics import renderPM
+# test = barcode.createBarcodeDrawing('Code128', **dict(value='00001', width=188.9, height=99.3))
+# renderPM.drawToFile(test, 'test.png', 'PNG')
+ 
 
 from reportlab.pdfgen import canvas
 
@@ -43,12 +48,12 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-c',  '--code', help='String to be encoded')
-    parser.add_argument('-y',  '--height',        default=2, dest='y', type=float)
-    parser.add_argument('-x',  '--width',         default=2, dest='x', type=float)
+    parser.add_argument('-y',  '--height',        default=2, dest='y', type=float, help='In centimeters')
+    parser.add_argument('-x',  '--width',         default=3, dest='x', type=float, help='In centimeters')
     parser.add_argument('-e',  '--encoder',       default='Code128', help='Encoder to be used. E.g. QR')
     parser.add_argument('-s',  '--show_text',     default=1, type=int)
     parser.add_argument('-f',  '--filename',      default='barcode.pdf')
-    parser.add_argument('-le', '--list-encoders', dest='le', default=False)
+    parser.add_argument('-le', '--list-encoders', default=False, dest='le')
     args = parser.parse_args()
 
     if args.le:
