@@ -17,7 +17,10 @@ python generate_barcode_simple.py --codes '["Box{:=04}".format(i) for i in range
        --encode Code128 --recipe avery_3475 --filename barcodes.pdf
 #+END_SRC
 
-#+RESULTS:
+For single encodings:
+#+BEGIN_SRC shell
+python create_single_barcode.py -c 'do crap' -x 5 -y 3
+#+END_SRC
 
 List available =recipes=:
 #+BEGIN_SRC shell
@@ -33,6 +36,7 @@ generate_barcode_simple.py -le
    - [X] better positioning of text below =code=
    - [X] different paper sizes than A4, which depend on =recipe=
    - [X] Complete command line options
+   - [ ] Different output formats for single barcode script
    - [ ] Allow linking to inventory to rely on pool
    - [ ] implement tests
 
