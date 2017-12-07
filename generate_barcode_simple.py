@@ -26,7 +26,7 @@ class BarcodeCanvas(canvas.Canvas):
                 x = x_offset
             y = y_offset + i / no_labels_x * label_height + i / no_labels_x * y_gap
             p = Paragraph(code, style=style["Normal"])
-            width, height = p.wrapOn(self, label_height, label_width)
+            width, height = p.wrapOn(self, label_height * 0.3, label_width)
             # self.drawCentredString(x + label_width / 2, y + label_height - height, code)
             p.drawOn(self, x, y + label_height - height)
             encoded = barcode.createBarcodeDrawing(encoder,
@@ -66,7 +66,7 @@ def main():
     if args.lr:
         import sys
         from recipe_database import DATABASE as DB
-        print('\nAccepted encoders are:\n')
+        print('\nDescribed recipes are:\n')
         import sys
         sys.stdout.write('\t' + '\n\t'.join(DB.keys()) + '\n\n')
         sys.stdout.write('\n\tWould you like to contribute metrics for a certain label paper?\n\tPlease do so at:\n\thttps://github.com/oneyb/reportlab-barcode-recipes')

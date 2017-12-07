@@ -39,26 +39,3 @@ DATABASE = {
         ,'pagesize':     'A4'
     }
 }
-
-ENCODER_FUNCTIONS = {
-    'Codabar'          : barcode.common.Codabar,
-    'Code11'           : barcode.common.Code11,
-    'Code128'          : barcode.code128.Code128,
-    'Code128Auto'      : barcode.code128.Code128Auto,
-    'EAN13'            : barcode.eanbc.Ean13BarcodeWidget,
-    'EAN5'             : barcode.eanbc.Ean5BarcodeWidget,
-    'EAN8'             : barcode.eanbc.Ean8BarcodeWidget,
-    'ECC200DataMatrix' : barcode.ecc200datamatrix.ECC200DataMatrix,
-    'I2of5'            : barcode.common.I2of5,
-    'ISBN'             : barcode.eanbc.ISBNBarcodeWidget,
-    'MSI'              : barcode.common.MSI,
-    'FIM'              : barcode.usps.FIM,
-    'POSTNET'          : barcode.usps.POSTNET,
-    'QR'               : barcode.qr.QrCode,
-    'Standard39'       : barcode.code39.Standard39,
-    'Extended39'       : barcode.code39.Extended39,
-    'Extended93'       : barcode.code93.Extended93,
-    'Standard93'       : barcode.code93.Standard93,
-    'UPCA'             : barcode.eanbc.UPCA,
-    'USPS_4State'      : barcode.usps4s.USPS_4State
-}
