@@ -6,103 +6,33 @@ Create single barcode
 """
 
 
-from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 
+class SingleBarcodeCanvas(canvas.Canvas):
 
-def find_dims_simple(code, label_width, label_height, encoder,
-                     tolerance=0.19 * mm):
-    barWidth, barHeight = label_width * 0.9, label_height 
-    while True:
-        encoded = encoder(code, barWidth=barWidth)
-        if encoded.width >= label_width:
-            barWidth = barWidth - 0.1 
+    def draw_labels(self, code, x, y, encoder, show_text=1): 
+        """Draws barcode label on the Canvas-based SingleBarcodeCanvas class"""
+
+        from reportlab.graphics import barcode
+
+        if show_text==0:
+            height = 0
         else:
-            break
-    while True:
-        encoded = encoder(code, barHeight=barHeight)
-        if encoded.height >= label_height * .76:
-            barHeight = barHeight - 0.1
-        else:
-            break
-    # TODO: adjust string height
-    # while True:
-    #     c.drawString(x + label_width / 3, y + label_height * 0.9, code)
-    #     encoded = encoder(code, barHeight=barHeight, barWidth=barWidth)
-    #     if encoded.height >= label_height * .76:
-    #         barHeight = barHeight - 0.1 * mm
-    #     else:
-    #         break
-    if barWidth <= tolerance:
-        raise BaseException, "the paper or label size results in 'barWidth' being too narrow"
-    return barWidth, barHeight
+            from reportlab.platypus import Paragraph
+            from reportlab.lib.styles import getSampleStyleSheet
+            style = getSampleStyleSheet()
+            # center text and wrap if necessary
+            style['Normal'].alignment = 1
+            p = Paragraph(code, style=style["Normal"])
+            width, height = p.wrapOn(self, x, y)
+            p.drawOn(self, 0, 0)
 
-def find_dims(code, label_width, label_height, encoder,
-              tolerance=0.19 * mm):
-    """Better way of finding dimensions of barcode"""
-
-    encoded = encoder(code)
-    barWidth, barHeight = encoded.barWidth, label_height
-
-    # Find width
-    barcode_barWidth_ratio = encoded.width / encoded.barWidth
-    while True:
-        encoded = encoder(code, barHeight=barHeight,
-                          barWidth=label_width / barcode_barWidth_ratio)
-        if encoded.width <= label_width:
-            barcode_barWidth_ratio = barcode_barWidth_ratio - 0.01
-        else:
-            barWidth = label_width / barcode_barWidth_ratio
-            break
-
-    # TODO: use drawHumanReadable
-    # TODO: adjust string height
-    # while True:
-    #     c.drawString(x + label_width / 3, y + label_height * 0.9, code)
-    #     encoded = encoder(code, barHeight=barHeight, barWidth=barWidth)
-    #     if encoded.height >= label_height * .76:
-    #         barHeight = barHeight - 0.01 * mm
-    #     else:
-    #         break
-
-    # find height
-    while True:
-        encoded = encoder(code, barWidth=barWidth, barHeight=barHeight)
-        if encoded.height >= label_height * .76:
-            barHeight = barHeight - 0.1 
-        else:
-            break
-    # import pdb; pdb.set_trace() 
-    if barWidth <= tolerance:
-        raise BaseException, "the paper or label size results in 'barWidth' being too narrow"
-    return barWidth, barHeight
-
-
-# barWidth2, barHeight2 = find_dims_old(codes[0], label_width, label_height)
-# print((barWidth, barHeight, barWidth2, barHeight2))
-
-class BarcodeCanvas(canvas.Canvas):
-
-    def draw_labels(self, codes, encoder, label_height, label_width,
-                    no_labels_x, no_labels_y, x_gap, x_offset, y_gap, y_offset): 
-        """Draws barcode labels on the Canvas-based BarcodeCanvas class"""
+        encoded = barcode.createBarcodeDrawing(encoder,
+                                               **dict(value  =code,
+                                                      height =y - height,
+                                                      width  =x))
         # import pdb; pdb.set_trace() 
-        # settings based on command line or recipes
-
-        # print codes
-
-        barWidth, barHeight = find_dims(codes[0], label_width, label_height, encoder)
-
-        for i, code in enumerate(codes):
-            if i % no_labels_x == 0:
-                x = x_offset
-            y = y_offset + i / no_labels_x * label_height + i / no_labels_x * y_gap
-            encoded = encoder(code, barHeight=barHeight, barWidth=barWidth)
-            encoded.drawOn(self, x, y)
-            self.drawString(x + label_width / 2.67, y + label_height * 0.9, code)
-            # if i == 5:
-            #     import pdb; pdb.set_trace() 
-            x = x + label_width + x_gap
+        encoded.drawOn(self, 0, 0 + height)
 
 
 # if __name__ == '__main__':
@@ -112,85 +42,48 @@ def main():
     import importlib
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--code',        default='0001')
-    parser.add_argument('-f', '--filename',     default='barcodes')
-    # parser.add_argument('-r', '--recipe',       default='avery_3475')
-    parser.add_argument('-b', '--barcode',      default='code128')
-    # parser.add_argument('-l', '--list-recipes', dest='lr', 
-    #                     action='store_true', default=True)
+    parser.add_argument('-c',  '--code', help='String to be encoded')
+    parser.add_argument('-y',  '--height',        default=2, dest='y', type=float)
+    parser.add_argument('-x',  '--width',         default=2, dest='x', type=float)
+    parser.add_argument('-e',  '--encoder',       default='Code128', help='Encoder to be used. E.g. QR')
+    parser.add_argument('-s',  '--show_text',     default=1, type=int)
+    parser.add_argument('-f',  '--filename',      default='barcode.pdf')
+    parser.add_argument('-le', '--list-encoders', dest='le', default=False)
     args = parser.parse_args()
 
-    # TODO: prettier --list-recipes
-    # if args.lr:
-    #     from recipe_database import DATABASE as DB
-    #     from pprint import pprint as pp
-    #     pp(DB.keys())
+    if args.le:
+        import sys
+        from reportlab.graphics import barcode
+        print('\nAccepted encoders are:\n')
+        sys.stdout.write('\t' + '\n\t'.join(barcode.getCodeNames()) + '\n\n')
+        raise NameError, "{0} not an accepted barcode encoder".format(args.encoder)
+        sys.exit(0)
+
+
+    # import pdb; pdb.set_trace() 
 
     # Reportlab imports
-    from reportlab.graphics.shapes import Drawing 
-    from reportlab.graphics import renderPDF, barcode
-    from reportlab.graphics import renderPM
-    import reportlab.lib.pagesizes
+    from reportlab.graphics import barcode
+    from reportlab.lib.units import cm
 
-    test = barcode.createBarcodeDrawing('Code128', **dict(value='00001', barHeight=88.9, barWidth=.3))
-
-    renderPM.drawToFile(test, 'test.png', 'PNG')
-
-
-    # import recipes
-    from recipe_database import ENCODER_FUNCTIONS
-    from recipe_database import DATABASE as DB
-    # Scanner bar width tolerance from reportlab.graphics.barcode.code128.py
-    # i.e. reportlab/graphics/barcode/code128.py
-    # SCANNER = {
-    #     'tolerance' : 0.19 * mm
-    # }
-    
     # Set important variables
-    encoder = ENCODER_FUNCTIONS.get(args.barcode)
-    if encoder is None:
-        print('\nAccepted encoders:\n')
-        import sys; sys.stdout.write('\t' + '\n\t'.join(ENCODER_FUNCTIONS.keys()) + '\n\n')
+    if args.encoder not in barcode.getCodeNames():
+        import sys
+        print('\nStopping here.\nAccepted encoders are:\n')
+        sys.stdout.write('\t' + '\n\t'.join(barcode.getCodeNames()) + '\n\n')
         raise NameError, "{0} not an accepted barcode encoder".format(args.barcode)
 
-
-    recipe = DB.get(args.recipe)
-    pagesize = getattr(reportlab.lib.pagesizes, recipe.pop('pagesize') if recipe.get('pagesize') is not None else 'A4')
-
-    try:
-        codes = eval(args.codes)
-    except NameError:
-        locals().update(recipe)
-        codes = eval(args.codes)
-    except:
-        codes = [args.codes
-                 for c in range(recipe.get('no_labels_y') *
-                                recipe.get('no_labels_x'))]
-
-    import pdb; pdb.set_trace
-
     # make the pdf
-    pdf = BarcodeCanvas(args.filename,
-                        pagesize = pagesize,
-                        bottomup = 0,
-                        pageCompression = 0,
-                        # encoding=rl_config.defaultEncoding,
-                        verbosity = 0,
-                        encrypt = None
+    pdf = SingleBarcodeCanvas(args.filename
+                              ,pagesize = (args.x * cm, args.y * cm)
+                              # ,bottomup = 0
     )
      
-    
-    pdf.draw_labels(codes, encoder, **recipe)
+    #ef draw_labels(self, code, h, w, encoder, show_text=1): 
+    pdf.draw_labels(args.code, args.x * cm, args.y * cm, args.encoder, args.show_text)
     pdf.showPage()
     pdf.save()
-    # # Testing
-    # import pdb; pdb.set_trace() 
-    # c = BarcodeCanvas('test'+args.filename
-    #                   ,pagesize = pagesize
-    # )
-    # c.drawString(42, 42, "Hello World...")
-    # c.showPage()
-    # c.save()
 
 if __name__ == '__main__':
     main()
+
