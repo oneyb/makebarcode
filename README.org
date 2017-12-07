@@ -34,7 +34,7 @@ generate_barcode_simple.py -le
 
 ** TODO Implement the following functionality:
    - [X] better positioning of text below =code=
-   - [X] different paper sizes than A4, which depend on =recipe=
+   - [X] different paper sizes than A4, which depend on [[file:recipe_database.py][recipe]] 
    - [X] Complete command line options
    - [ ] Different output formats for single barcode script
    - [ ] Allow linking to inventory to rely on pool
