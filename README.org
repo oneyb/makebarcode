@@ -14,7 +14,7 @@ For now, I use this simple python module as such:
 
 #+BEGIN_SRC shell
 python generate_barcode_simple.py --codes '["Box{:=04}".format(i) for i in range(no_labels_x * no_labels_y + 1)[1:]]' \
-       --encode Code128 --recipe avery_3475 --filename barcodes.pdf
+       --encoder Code128 --recipe avery_3475 --filename barcodes.pdf
 #+END_SRC
 
 For single encodings:
