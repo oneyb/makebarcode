@@ -13,22 +13,26 @@ package. For now, I will publish this poor code.
 For now, I use this simple python module as such:
 
 #+BEGIN_SRC shell
-python generate-barcode-simple.py --codes '["Box{:=04}".format(i) for i in range(no_labels_x * no_labels_y + 1)[1:]]' \
-       --barcode Code128 --recipe avery_3475 --filename barcodes.pdf
+python generate_barcode_simple.py --codes '["Box{:=04}".format(i) for i in range(no_labels_x * no_labels_y + 1)[1:]]' \
+       --encode Code128 --recipe avery_3475 --filename barcodes.pdf
 #+END_SRC
 
 #+RESULTS:
 
 List available =recipes=:
 #+BEGIN_SRC shell
-generate-barcode-simple.py --list-recipes
+generate_barcode_simple.py --list-recipes
 #+END_SRC
 
+List available =encoders=:
+#+BEGIN_SRC shell
+generate_barcode_simple.py -le
+#+END_SRC
 
 ** TODO Implement the following functionality:
-   - [ ] better positioning of text below =code=
+   - [X] better positioning of text below =code=
    - [X] different paper sizes than A4, which depend on =recipe=
-   - [ ] Complete command line options
+   - [X] Complete command line options
    - [ ] Allow linking to inventory to rely on pool
    - [ ] implement tests
 
