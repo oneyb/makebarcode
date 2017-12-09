@@ -61,8 +61,8 @@ def main():
     parser.add_argument('-r',  '--recipe',        default='avery_3475')
     parser.add_argument('-e',  '--encoder',       default='Code128', help='Encoder to be used. E.g. QR')
     parser.add_argument('-s',  '--show_text',     default=1,         type=int)
-    parser.add_argument('-le', '--list-encoders', default=False,     dest='le')
-    parser.add_argument('-lr', '--list-recipes',  default=False,     dest='lr')
+    parser.add_argument('-le', '--list-encoders', default=False,     dest='le', action='store_true')
+    parser.add_argument('-lr', '--list-recipes',  default=False,     dest='lr', action='store_true')
     args = parser.parse_args()
 
     if args.le:
@@ -70,7 +70,6 @@ def main():
         from reportlab.graphics import barcode
         print('\nAccepted encoders are:\n')
         sys.stdout.write('\t' + '\n\t'.join(barcode.getCodeNames()) + '\n\n')
-        raise NameError, "{0} not an accepted barcode encoder".format(args.encoder)
         sys.exit(0)
 
     if args.lr:

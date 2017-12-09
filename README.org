@@ -13,7 +13,7 @@ package. For now, I will publish this poor code.
 For now, I use this simple python module as such:
 
 #+BEGIN_SRC shell
-python generate_barcode_simple.py --codes '["Box{:=04}".format(i) for i in range(no_labels_x * no_labels_y + 1)[1:]]' \
+python create_page_of_barcodes.py --codes '["Box{:=04}".format(i) for i in range(no_labels_x * no_labels_y + 1)[1:]]' \
        --encoder Code128 --recipe avery_3475 --filename barcodes.pdf
 #+END_SRC
 
@@ -23,22 +23,68 @@ python create_single_barcode.py -c 'do crap' -x 5 -y 3
 #+END_SRC
 
 List available =recipes=:
-#+BEGIN_SRC shell
-generate_barcode_simple.py --list-recipes
+#+BEGIN_SRC shell :results verbatim
+python create_page_of_barcodes.py --list-recipes
 #+END_SRC
 
+#+RESULTS:
+#+begin_example
+
+Described recipes are:
+
+	avery_L7120
+	herma_4474
+	avery_3475
+
+
+	Would you like to contribute metrics for a certain label paper?
+	Please do so at:
+	https://github.com/oneyb/reportlab-barcode-recipes
+#+end_example
+
+
 List available =encoders=:
-#+BEGIN_SRC shell
-generate_barcode_simple.py -le
+#+BEGIN_SRC shell :results verbatim
+python create_page_of_barcodes.py -le
 #+END_SRC
+
+#+RESULTS:
+#+begin_example
+
+Accepted encoders are:
+
+	Codabar
+	Code11
+	Code128
+	Code128Auto
+	EAN13
+	EAN5
+	EAN8
+	ECC200DataMatrix
+	Extended39
+	Extended93
+	FIM
+	I2of5
+	ISBN
+	MSI
+	POSTNET
+	QR
+	Standard39
+	Standard93
+	UPCA
+	USPS_4State
+
+#+end_example
 
 ** TODO Implement the following functionality:
    - [X] better positioning of text below =code=
    - [X] different paper sizes than A4, which depend on [[file:recipe_database.py][recipe]] 
    - [X] Complete command line options
-   - [ ] Different output formats for single barcode script
+   - [ ] implement scripting capabilities
    - [ ] Allow linking to inventory to rely on pool
-   - [ ] implement tests
+   - [ ] page barcode sequences for traceability work
+   - [ ] devise and implement tests
+   - [ ] Different output formats for single barcode script
 
 
 * Contributions, please
