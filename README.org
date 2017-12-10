@@ -9,6 +9,15 @@ My needs are minimal but hopefully someone will tell me where to find
 all of these metrics or that someone has a similar open source software
 package. For now, I will publish this poor code.
 
+** Install
+
+#+BEGIN_SRC shell
+pip install reportlab
+git clone https://github.com/oneyb/reportlab-barcode-recipes
+[[ -d $HOME/bin ]] && ln -sf $PWD/reportlab-barcode-recipes/*py $HOME/bin/.
+#+END_SRC
+
+I plan to package this stuff to make the above easier for you and I.
 * Usage
 For now, I use this simple python module as such:
 
@@ -19,7 +28,7 @@ python create_page_of_barcodes.py --codes '["Box{:=04}".format(i) for i in range
 
 For single encodings:
 #+BEGIN_SRC shell
-python create_single_barcode.py -c 'do crap' -x 5 -y 3
+python create_single_barcode.py -c 'universal answer 42' -x 5 -y 3
 #+END_SRC
 
 List available =recipes=:
@@ -76,15 +85,15 @@ Accepted encoders are:
 
 #+end_example
 
-** TODO Implement the following functionality:
-   - [X] better positioning of text below =code=
-   - [X] different paper sizes than A4, which depend on [[file:recipe_database.py][recipe]] 
-   - [X] Complete command line options
-   - [ ] implement scripting capabilities
-   - [ ] Allow linking to inventory to rely on pool
-   - [ ] page barcode sequences for traceability work
-   - [ ] devise and implement tests
-   - [ ] Different output formats for single barcode script
+* TODO Implement the following functionality:
+  - [X] better positioning of text below =code=
+  - [X] different paper sizes than A4, which depend on [[file:recipe_database.py][recipe]] 
+  - [X] Complete command line options
+  - [ ] implement =python= scripting capabilities/make package
+  - [ ] Allow linking to inventory to rely on pool
+  - [ ] page barcode sequences for traceability work
+  - [ ] devise and implement tests
+  - [ ] Different output formats for single barcode script
 
 
 * Contributions, please
