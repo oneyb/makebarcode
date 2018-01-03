@@ -11,34 +11,7 @@ Create single barcode
 # renderPM.drawToFile(test, 'test.png', 'PNG')
  
 
-from reportlab.pdfgen import canvas
-
-class SingleBarcodeCanvas(canvas.Canvas):
-
-    def draw_labels(self, code, x, y, encoder, show_text=1): 
-        """Draws barcode label on the Canvas-based SingleBarcodeCanvas class"""
-
-        from reportlab.graphics import barcode
-
-        if show_text==0:
-            height = 0
-        else:
-            from reportlab.platypus import Paragraph
-            from reportlab.lib.styles import getSampleStyleSheet
-            style = getSampleStyleSheet()
-            # center text and wrap if necessary
-            style['Normal'].alignment = 1
-            p = Paragraph(code, style=style["Normal"])
-            width, height = p.wrapOn(self, x, y)
-            p.drawOn(self, 0, 0)
-
-        encoded = barcode.createBarcodeDrawing(encoder,
-                                               **dict(value  =code,
-                                                      height =y - height,
-                                                      width  =x))
-        # import pdb; pdb.set_trace() 
-        encoded.drawOn(self, 0, 0 + height)
-
+from barcode import SingleBarcodeCanvas
 
 # if __name__ == '__main__':
 def main():
