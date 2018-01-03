@@ -32,7 +32,7 @@ def main():
 
     if args.lr:
         import sys
-        from recipe_database import DATABASE as DB
+        from makebarcode.recipe_database import DATABASE as DB
         print('\nDescribed recipes are:\n')
         import sys
         sys.stdout.write('\t' + '\n\t'.join(DB.keys()) + '\n\n')
@@ -47,7 +47,7 @@ def main():
     from reportlab.lib import pagesizes
 
     # import recipes
-    from recipe_database import DATABASE as DB
+    from makebarcode.recipe_database import DATABASE as DB
 
     # Set important variables
     if args.encoder not in barcode.getCodeNames():

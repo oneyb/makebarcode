@@ -11,7 +11,7 @@ Create single barcode
 # renderPM.drawToFile(test, 'test.png', 'PNG')
  
 
-from barcode import SingleBarcodeCanvas
+from makebarcode import SingleBarcodeCanvas
 
 # if __name__ == '__main__':
 def main():
