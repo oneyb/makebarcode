@@ -60,12 +60,15 @@ def main():
     recipe = DB.get(args.recipe)
     pagesize = getattr(pagesizes, recipe.pop('pagesize') if recipe.get('pagesize') is not None else 'A4')
 
-    try:
-        codes = eval(args.codes)
-    except NameError:
-        locals().update(recipe)
-        codes = eval(args.codes)
-    except:
+    import re
+    found_script = re.search('[\[\]*./_-]', args.codes)
+    if found_script is not None:
+        try:
+            codes = eval(args.codes)
+        except NameError:
+                locals().update(recipe)
+                codes = eval(args.codes)
+    else:
         from warnings import warn
         warn("The ID to be encoded is not python code. Assuming it's a unique string.", Warning)
         codes = [args.codes

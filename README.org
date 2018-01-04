@@ -12,13 +12,13 @@ package. For now, I will publish this poor code.
 ** Install
 
 #+BEGIN_SRC shell
-pip install https://github.com/oneyb/reportlab-barcode-recipes/makebarcode
+pip install git+https://github.com/oneyb/makebarcode
 # Or:
-git clone https://github.com/oneyb/reportlab-barcode-recipes
-
+git clone https://github.com/oneyb/makebarcode
+cd makebarcode && python setup.py install
 #+END_SRC
 
-#+RESULTS:
+*NOTE*: you will need to install it as root, in order to have the following scripts in the system path.
 
 * Usage
 For now, I use this simple python module as such:
@@ -91,10 +91,11 @@ Accepted encoders are:
   - [X] better positioning of text below =code=
   - [X] different paper sizes than A4, which depend on [[file:recipe_database.py][recipe]] 
   - [X] Complete command line options
-  - [ ] implement =python= scripting capabilities/make package
+  - [X] implement =python= scripting capabilities/make package
   - [ ] Allow linking to inventory to rely on pool
   - [ ] page barcode sequences for traceability work
   - [ ] devise and implement tests
+    - [ ] implement cosmetic test idea: output pdf, convert to image, compare raw image data
   - [ ] Different output formats for single barcode script
 
 
