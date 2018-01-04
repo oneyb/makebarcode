@@ -25,7 +25,7 @@ class SingleBarcodeCanvas(canvas.Canvas):
 
         encoded = barcode.createBarcodeDrawing(encoder,
                                                **dict(value=code,
-                                                      height=y - height,
+                                                      height=y - height * 1.1,
                                                       width=x))
         # import pdb; pdb.set_trace() 
         encoded.drawOn(self, 0, 0 + height)
@@ -38,7 +38,8 @@ class BarcodeCanvas(canvas.Canvas):
     from reportlab.pdfgen import canvas
 
     def draw_labels(self, codes, encoder, label_height, label_width,
-                    no_labels_x, no_labels_y, x_gap, x_offset, y_gap, y_offset, show_text=1): 
+                    no_labels_x, no_labels_y, x_gap, x_offset, y_gap,
+                    y_offset, show_text=1):
 
         from reportlab.lib.styles import getSampleStyleSheet
         from reportlab.platypus import Paragraph
@@ -69,7 +70,7 @@ class BarcodeCanvas(canvas.Canvas):
 
             encoded = barcode.createBarcodeDrawing(encoder,
                                                    **dict(value=code,
-                                                          height=(label_height - height) * 0.98,
+                                                          height=(label_height - height) * 0.92,
                                                           width=label_width))
             # import pdb; pdb.set_trace() 
             encoded.drawOn(self, x, y)
