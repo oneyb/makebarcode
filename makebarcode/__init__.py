@@ -5,7 +5,6 @@ class SingleBarcodeCanvas(canvas.Canvas):
     Class for making a single barcode (pdf)
     """
 
-    from reportlab.pdfgen import canvas
     def draw_labels(self, code, x, y, encoder, show_text=1): 
         """Draws barcode label on the Canvas-based SingleBarcodeCanvas class"""
 
@@ -34,8 +33,6 @@ class BarcodeCanvas(canvas.Canvas):
     """Class for making a page of barcodes (pdf). Draws barcode labels on the
     Canvas-based BarcodeCanvas class
     """
-
-    from reportlab.pdfgen import canvas
 
     def draw_labels(self, codes, encoder, label_height, label_width,
                     no_labels_x, no_labels_y, x_gap, x_offset, y_gap,
