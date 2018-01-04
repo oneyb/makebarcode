@@ -52,6 +52,13 @@ if __name__ == "__main__":
           version=VERSION,
           download_url=DOWNLOAD_URL,
           install_requires=install_requires,
+          entry_points = {
+              'console_scripts': [
+                  'create_page_of_barcodes.py=makebarcode.create_page_of_barcodes:main',
+                  'create_single_barcode.py=makebarcode.create_single_barcode:main'
+              ],
+          },
+          # scripts=['bin/create_page_of_barcodes.py', 'bin/create_single_barcode.py'],
           packages=['makebarcode'],
           classifiers=[
               'Intended Audience :: Entrepreneurial/Inventory',

@@ -1,3 +1,5 @@
+from reportlab.pdfgen import canvas
+
 class SingleBarcodeCanvas(canvas.Canvas):
     """
     Class for making a single barcode (pdf)
