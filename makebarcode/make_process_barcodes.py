@@ -11,13 +11,21 @@ class ProcessBarcode(canvas.Canvas):
     from reportlab.graphics.barcode import createBarcodeDrawing
 
     # TODO Read in csv
+    csvfile = '/home/oney/Schweizer Insektenzucht/Zucht/standardanweisung/ablauf.xlsx'
+    sheetname = 'tenebrio_prozesse'
     def get_processes(csvfile):
-        pass
+        # from pandas import read_csv as read
+        from pandas import read_excel as read
+
+        data = read(csvfile, sheetname=sheetname)
+        data = data[data.is_]
+
+        return data
 
     
     processes = get_processes(csvfile)
 
-    to_list = list(process=[process_steps])
+    todo_list = list(process=[process_steps])
 
 
     # TODO create start and end barcodes
@@ -45,7 +53,6 @@ class ProcessBarcode(canvas.Canvas):
     # TODO make page a color or give a watermark
     def get_processes(csvfile):
         pass
-
 
 
 
