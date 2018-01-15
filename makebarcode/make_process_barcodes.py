@@ -8,12 +8,83 @@ Create barcodes from processes and embed in a PDF with tasks
 
 class ProcessBarcode(canvas.Canvas):
 
-    # Read in csv
-    # create start and end barcodes
-    # list process steps
-    # make new page if necessary
-    # make page a color or give a watermark
-    # put on pdf
+    from reportlab.graphics.barcode import createBarcodeDrawing
+
+    # TODO Read in csv
+    def get_processes(csvfile):
+        pass
+
+    
+    processes = get_processes(csvfile)
+
+    to_list = list(process=[process_steps])
+
+
+    # TODO create start and end barcodes
+    def make_start_and_end_barcodes(csvfile, start_format='START %s',
+                                    end_format='END %s', encoder='Code128'):
+
+        # filter processes
+        # make rows
+        for i, process in processes.iterkeys():
+            start_bc = createBarcodeDrawing(encoder,
+                                            **dict(value=start_format.format(process),
+                                                   height=(label_height - height) * 0.92,
+                                                   width=label_width))
+
+        pass
+    
+    barcodes = make_start_and_end_barcodes(csvfile)
+
+    # TODO put on pdf
+    def get_processes(csvfile):
+        pass
+    # TODO list process steps
+    def list_processes(csvfile):
+        pass
+    # TODO make page a color or give a watermark
+    def get_processes(csvfile):
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def draw_labels(self, codes, encoder, label_height, label_width,
                     no_labels_x, no_labels_y, x_gap, x_offset, y_gap,
