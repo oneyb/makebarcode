@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #----------------------------------------------------------------------
 """
@@ -14,30 +14,40 @@ class ProcessBarcode(canvas.Canvas):
     sheetname = 'tenebrio_prozesse'
     def get_processes(csvfile):
         # from pandas import read_csv as read
+        # import pandas as pd
         from pandas import read_excel as read
 
         data = read(csvfile, sheetname=sheetname)
-        data = data[data.is_]
+        data.dropna(0, 'all', inplace=True)
 
         return data
 
     
     processes = get_processes(csvfile)
 
-    todo_list = list(process=[process_steps])
+    # Reshape
+    def shape_processes(processes, process_col, step_col):
+        todo_list = {process: processes[step_col][processes[process_col] == process].tolist()
+                     for process in processes[process_col].unique()}
+        return todo_list
 
+    processes_shp = shape_processes(processes, 'Prozess', 'Schritt')
 
     # TODO create start and end barcodes
-    def make_start_and_end_barcodes(csvfile, start_format='START %s',
-                                    end_format='END %s', encoder='Code128'):
+    start_format='START %s'
+    end_format='ENDE %s'
+    encoder='Code128'
 
-        # filter processes
-        # make rows
-        for i, process in processes.iterkeys():
-            start_bc = createBarcodeDrawing(encoder,
-                                            **dict(value=start_format.format(process),
-                                                   height=(label_height - height) * 0.92,
-                                                   width=label_width))
+    # filter processes
+    # make rows
+    barcodes = {}
+    for i, process in processes.iterkeys():
+        barcodes[process] = createBarcodeDrawing(encoder,
+                             **dict(value=start_format.format(process),
+                                    # height=(label_height - height) * 0.92,
+                                    # width=label_width
+                             )
+        )
 
         pass
     
