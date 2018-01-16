@@ -37,32 +37,37 @@ class ProcessBarcode(canvas.Canvas):
     start_format='START %s'
     end_format='ENDE %s'
     encoder='Code128'
+    label_height=2 * cm * 0.92
+    label_width=2 * cm * 0.92
 
     # filter processes
     # make rows
-    barcodes = {}
     for i, process in processes.iterkeys():
-        barcodes[process] = createBarcodeDrawing(encoder,
+        start_barcode = createBarcodeDrawing(encoder,
                              **dict(value=start_format.format(process),
                                     # height=(label_height - height) * 0.92,
                                     # width=label_width
                              )
         )
+        end_barcode = createBarcodeDrawing(encoder,
+                             **dict(value=end_format.format(process),
+                                    # height=(label_height - height) * 0.92,
+                                    # width=label_width
+                             )
+        )
+        from reportlab.platypus import Paragraph
+        from reportlab.lib.styles import getSampleStyleSheet
+        style = getSampleStyleSheet()
+        # center text and wrap if necessary
+        style['Normal'].alignment = 1
 
+
+        p = Paragraph(code, style=style["Normal"])
+        width, height = p.wrapOn(self, label_width, label_height * 0.3)
+        # self.drawCentredString(x + label_width / 2, y + label_height - height, code)
+        p.drawOn(self, x, y + label_height - height)
         pass
     
-    barcodes = make_start_and_end_barcodes(csvfile)
-
-    # TODO put on pdf
-    def get_processes(csvfile):
-        pass
-    # TODO list process steps
-    def list_processes(csvfile):
-        pass
-    # TODO make page a color or give a watermark
-    def get_processes(csvfile):
-        pass
-
 
 
 
