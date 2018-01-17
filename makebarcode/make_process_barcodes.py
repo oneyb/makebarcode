@@ -6,6 +6,31 @@ Create barcodes from processes and embed in a PDF with tasks
 """
 
 class ProcessBarcode(canvas.Canvas):
+    """
+    #+begin_src ditaa :cmdline -E :file /home/oney/Schweizer Insektenzucht/Zucht/server/prozess_blatt.png
+    +------------------------------------------------------------------+
+    |    +---------+       +-------------------+       +---------+     |
+    |    |         |       | 1. Scan START     |       |         |     |
+    |    | Barcode |       | 2. Schritt        |       | Barcode |     |
+    |    |         |       | 3. Scan Box       |       |         |     |
+    |    |         |       | 4. Schritt        |       |         |     |
+    |    +---------+       | 5. Scan ENDE      |       +---------+     |
+    |       START          +-------------------+          ENDE         |
+    |      Prozess A                                     Prozess A     |
+    +------------------------------------------------------------------+
+
+    +------------------------------------------------------------------+
+    |    +---------+       +-------------------+       +---------+     |
+    |    |         |       | 1. Scan START     |       |         |     |
+    |    | Barcode |       | 2. Schritt        |       | Barcode |     |
+    |    |         |       | 3. Schritt        |       |         |     |
+    |    +---------+       | 4. Scan ENDE      |       +---------+     |
+    |       START          +-------------------+          ENDE         |
+    |      Prozess B                                     Prozess B     |
+    +------------------------------------------------------------------+
+    #+end_src
+
+    """
 
     from reportlab.graphics.barcode import createBarcodeDrawing
 
@@ -60,7 +85,6 @@ class ProcessBarcode(canvas.Canvas):
         style = getSampleStyleSheet()
         # center text and wrap if necessary
         style['Normal'].alignment = 1
-
 
         p = Paragraph(code, style=style["Normal"])
         width, height = p.wrapOn(self, label_width, label_height * 0.3)
