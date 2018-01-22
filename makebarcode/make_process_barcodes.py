@@ -36,27 +36,40 @@ class ProcessBarcode(canvas.Canvas):
 
     # TODO Read in csv
     csvfile = '/home/oney/Schweizer Insektenzucht/Zucht/standardanweisung/ablauf.xlsx'
-    sheetname = 'tenebrio_prozesse'
-    def get_processes(csvfile):
+    sheet_name = 'tenebrio_prozesse'
+    def read_processes(csvfile, sheet_name=None):
         # from pandas import read_csv as read
         # import pandas as pd
         from pandas import read_excel as read
 
-        data = read(csvfile, sheetname=sheetname)
+        data = read(csvfile, sheet_name=sheet_name)
         data.dropna(0, 'all', inplace=True)
 
         return data
 
     
-    processes = get_processes(csvfile)
+    processes_df = read_processes(csvfile, sheet_name)
 
     # Reshape
-    def shape_processes(processes, process_col, step_col):
-        todo_list = {process: processes[step_col][processes[process_col] == process].tolist()
-                     for process in processes[process_col].unique()}
-        return todo_list
+    def filter_processes(processes, process_col, steps_col, queries=None):
+        from pandas import DataFrame
+        if queries is not None:
+            assert type(queries) is type(dict())
+            assert all(type(x) is type(list()) for x in queries.values())
+            assert all(x in processes.columns.tolist() for x in queries.keys())
+            assert type(processes) is type(DataFrame())
+            for key in queries.keys():
+                # import pdb; pdb.set_trace() 
+                processes.where(processes[key].isin(queries[key]), inplace=True)
 
-    processes_shp = shape_processes(processes, 'Prozess', 'Schritt')
+        # processes = processes_df.to_dict()
+        lists = {process: processes[steps_col][processes[process_col] == process].tolist()
+                 for process in processes[process_col].unique()
+        }
+        # todo_list = processes
+        return lists
+
+    processes_fil = filter_processes(processes_df, 'Prozess', 'Schritt', queries=dict(Wichtigkeit=['Lebensmittel']))
 
     # TODO create start and end barcodes
     start_format='START %s'
