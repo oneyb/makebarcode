@@ -94,6 +94,11 @@ Accepted encoders are:
   - [X] implement =python= scripting capabilities/make package
   - [ ] Allow linking to inventory to rely on pool
   - [ ] page barcode sequences for traceability work
+    - [ ] filter process inventory
+    - [ ] split up processes per room
+    - [ ] add barcodes for problems
+    - [ ] Add header with info, logo, and versioning
+    - [ ] add watermark
   - [ ] devise and implement tests
     - [ ] implement cosmetic test idea: output pdf, convert to image, compare raw image data
   - [ ] Different output formats for single barcode script

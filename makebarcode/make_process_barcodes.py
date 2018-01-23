@@ -8,39 +8,48 @@ Create barcodes from processes and embed in a PDF with tasks
 class ProcessBarcode(canvas.Canvas):
     """
     #+begin_src ditaa :cmdline -E :file /home/oney/Schweizer Insektenzucht/Zucht/server/prozess_blatt.png
-    +------------------------------------------------------------------+
-    |    +---------+       +-------------------+       +---------+     |
-    |    |         |       | 1. Scan START     |       |         |     |
-    |    | Barcode |       | 2. Schritt        |       | Barcode |     |
-    |    |         |       | 3. Scan Box       |       |         |     |
-    |    |         |       | 4. Schritt        |       |         |     |
-    |    +---------+       | 5. Scan ENDE      |       +---------+     |
-    |       START          +-------------------+          ENDE         |
-    |      Prozess A                                     Prozess A     |
-    +------------------------------------------------------------------+
+    +---------------------------------------------------------+
+    |                         Kopzfzeile                      |
+    |  Prozess werden dokumentiert durchs Scannen vom ersten  |
+    |  Barcode. Dann werden die Prozessschritte gemacht.      |
+    |  Folgend wird der finale barcode gescannt.              |
+    |  Revision 1, Ensectable AG, Brian J. Oney               |
+    +---------------------------------------------------------+
+    +---------------------------------------------------------+
+    |     Prozess A                            Prozess A      |
+    |      START                                  ENDE        |
+    |    +---------+     +--------------+     +---------+     |
+    |    |         |     | 1. Schritt   |     |         |     |
+    |    |         |     | 2. Scan Box  |     | Barcode |     |
+    |    | Barcode |     | 3. Schritt   |     |         |     |
+    |    +---------+     +--------------+     +---------+     |
+    +---------------------------------------------------------+
 
-    +------------------------------------------------------------------+
-    |    +---------+       +-------------------+       +---------+     |
-    |    |         |       | 1. Scan START     |       |         |     |
-    |    | Barcode |       | 2. Schritt        |       | Barcode |     |
-    |    |         |       | 3. Schritt        |       |         |     |
-    |    +---------+       | 4. Scan ENDE      |       +---------+     |
-    |       START          +-------------------+          ENDE         |
-    |      Prozess B                                     Prozess B     |
-    +------------------------------------------------------------------+
+    +---------------------------------------------------------+
+    |     Prozess B                            Prozess B      |
+    |      START                                  ENDE        |
+    |    +---------+     +--------------+     +---------+     |
+    |    |  START  |     | 1. Schritt   |     |   ENDE  |     |
+    |    |         |     | 2. Schritt   |     |         |     |
+    |    | Barcode |     | 3. Schritt   |     | Barcode |     |
+    |    +---------+     +--------------+     +---------+     |
+    +---------------------------------------------------------+
     #+end_src
 
     """
 
     from reportlab.graphics.barcode import createBarcodeDrawing
+    from pandas import DataFrame
+    # from pandas import read_csv as read
+    # import pandas as pd
+    from pandas import read_excel as read
+    from reportlab.platypus import Paragraph
+    from reportlab.lib.styles import getSampleStyleSheet
 
     # TODO Read in csv
     csvfile = '/home/oney/Schweizer Insektenzucht/Zucht/standardanweisung/ablauf.xlsx'
     sheet_name = 'tenebrio_prozesse'
     def read_processes(csvfile, sheet_name=None):
-        # from pandas import read_csv as read
-        # import pandas as pd
-        from pandas import read_excel as read
 
         data = read(csvfile, sheet_name=sheet_name)
         data.dropna(0, 'all', inplace=True)
@@ -52,12 +61,11 @@ class ProcessBarcode(canvas.Canvas):
 
     # Reshape
     def filter_processes(processes, process_col, steps_col, queries=None):
-        from pandas import DataFrame
         if queries is not None:
             assert type(queries) is type(dict())
+            assert type(processes) is type(DataFrame())
             assert all(type(x) is type(list()) for x in queries.values())
             assert all(x in processes.columns.tolist() for x in queries.keys())
-            assert type(processes) is type(DataFrame())
             for key in queries.keys():
                 # import pdb; pdb.set_trace() 
                 processes.where(processes[key].isin(queries[key]), inplace=True)
@@ -67,34 +75,33 @@ class ProcessBarcode(canvas.Canvas):
                  for process in processes[process_col].unique()
         }
         # todo_list = processes
+        assert all(type(x) is type(list()) for x in lists.values())
         return lists
 
-    processes_fil = filter_processes(processes_df, 'Prozess', 'Schritt', queries=dict(Wichtigkeit=['Lebensmittel']))
+    processes = filter_processes(processes_df, 'Prozess', 'Schritt',
+                                 queries=dict(Wichtigkeit=['Lebensmittel']))
 
     # TODO create start and end barcodes
     start_format='START %s'
     end_format='ENDE %s'
     encoder='Code128'
-    label_height=2 * cm * 0.92
-    label_width=2 * cm * 0.92
+    label_height = 2 * cm * 0.92
+    label_width = 2 * cm * 0.92
 
     # filter processes
     # make rows
-    for i, process in processes.iterkeys():
-        start_barcode = createBarcodeDrawing(encoder,
-                             **dict(value=start_format.format(process),
-                                    # height=(label_height - height) * 0.92,
-                                    # width=label_width
+    for i, process in enumerate(processes.keys()):
+        start_bc = createBarcodeDrawing(encoder,
+                                        **dict(value=start_format.format(process),
+                                               height=(label_height - height) * 0.92,
+                                               width=label_width
+                                        ))
+        end_bc = createBarcodeDrawing(encoder,
+                                           **dict(value=end_format.format(process),
+                                                  height=(label_height - height) * 0.92,
+                                                  width=label_width
                              )
         )
-        end_barcode = createBarcodeDrawing(encoder,
-                             **dict(value=end_format.format(process),
-                                    # height=(label_height - height) * 0.92,
-                                    # width=label_width
-                             )
-        )
-        from reportlab.platypus import Paragraph
-        from reportlab.lib.styles import getSampleStyleSheet
         style = getSampleStyleSheet()
         # center text and wrap if necessary
         style['Normal'].alignment = 1
@@ -103,7 +110,6 @@ class ProcessBarcode(canvas.Canvas):
         width, height = p.wrapOn(self, label_width, label_height * 0.3)
         # self.drawCentredString(x + label_width / 2, y + label_height - height, code)
         p.drawOn(self, x, y + label_height - height)
-        pass
     
 
 
