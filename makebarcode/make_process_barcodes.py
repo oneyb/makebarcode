@@ -114,18 +114,19 @@ class ProcessBarcode(canvas.Canvas):
 
         text_pos_x = margins[0] + labels_dims[0] + gaps[0]
         text_pos_y = 0
-        steps_dims = (pagesize[0] - 2 * label_dims[0], label_dims[1] / len(processes[key]))
+        step_dims = (pagesize[0] - 2 * label_dims[0] + 2 * gaps[0],
+                      label_dims[1] / len(processes[key]))
         for j, step in processes[key]:
             text = "%i. %s".format(j, step)
             p = Paragraph(text, style=style["Normal"])
-            width, height = p.wrapOn(self, *steps_dims)
+            width, height = p.wrapOn(self, *step_dims)
             p.drawOn(self, text_pos_x, text_pos_y + row_pos)
             text_pos_y += height
 
         end_bc = createBarcodeDrawing(encoder,
                                       **dict(value=end_format.format(process),
-                                             height=label_height[1],
-                                             width=label_width[0]
+                                             height=label_dims[1],
+                                             width=label_dims[0]
                                       ))
         end_bc.drawOn(self, pagesize[0] - label_dims[0] - margins[0], row_pos[0])
 
