@@ -7,35 +7,35 @@ Create barcodes from processes and embed in a PDF with tasks
 
 class ProcessBarcode(canvas.Canvas):
     """
+
     #+begin_src ditaa :cmdline -E :file /home/oney/Schweizer Insektenzucht/Zucht/server/prozess_blatt.png
     +---------------------------------------------------------+
     |                         Kopzfzeile                      |
     |  Prozess werden dokumentiert durchs Scannen vom ersten  |
     |  Barcode. Dann werden die Prozessschritte gemacht.      |
-    |  Folgend wird der finale barcode gescannt.              |
-    |  Revision 1, Ensectable AG, Brian J. Oney               |
+    |  Folgend wird der finale barcode gescannt.       _\__/_ |
+    |  Revision 1, Ensectable AG, Brian J. Oney        \-  -/ |
+    |                                                   \`´/  |
     +---------------------------------------------------------+
     +---------------------------------------------------------+
     |     Prozess A                            Prozess A      |
     |      START                                  ENDE        |
     |    +---------+     +--------------+     +---------+     |
     |    |         |     | 1. Schritt   |     |         |     |
-    |    |         |     | 2. Scan Box  |     | Barcode |     |
-    |    | Barcode |     | 3. Schritt   |     |         |     |
+    |    | Barcode |     | 2. Scan Box  |     | Barcode |     |
+    |    |         |     | 3. Schritt   |     |         |     |
     |    +---------+     +--------------+     +---------+     |
     +---------------------------------------------------------+
-
     +---------------------------------------------------------+
     |     Prozess B                            Prozess B      |
-    |      START                                  ENDE        |
+    |       START                                 ENDE        |
     |    +---------+     +--------------+     +---------+     |
-    |    |  START  |     | 1. Schritt   |     |   ENDE  |     |
-    |    |         |     | 2. Schritt   |     |         |     |
-    |    | Barcode |     | 3. Schritt   |     | Barcode |     |
+    |    |         |     | 1. Schritt   |     |         |     |
+    |    | Barcode |     | 2. Schritt   |     | Barcode |     |
+    |    |         |     | 3. Schritt   |     |         |     |
     |    +---------+     +--------------+     +---------+     |
     +---------------------------------------------------------+
     #+end_src
-
     """
 
     from reportlab.graphics.barcode import createBarcodeDrawing
@@ -45,6 +45,10 @@ class ProcessBarcode(canvas.Canvas):
     from pandas import read_excel as read
     from reportlab.platypus import Paragraph
     from reportlab.lib.styles import getSampleStyleSheet
+    from reportlab.lib.units import mm
+    from reportlab.lib import pagesizes
+
+    pagesize = pagesizes.A4
 
     # TODO Read in csv
     csvfile = '/home/oney/Schweizer Insektenzucht/Zucht/standardanweisung/ablauf.xlsx'
@@ -74,7 +78,6 @@ class ProcessBarcode(canvas.Canvas):
         lists = {process: processes[steps_col][processes[process_col] == process].tolist()
                  for process in processes[process_col].unique()
         }
-        # todo_list = processes
         assert all(type(x) is type(list()) for x in lists.values())
         return lists
 
@@ -85,109 +88,47 @@ class ProcessBarcode(canvas.Canvas):
     start_format='START %s'
     end_format='ENDE %s'
     encoder='Code128'
-    label_height = 2 * cm * 0.92
-    label_width = 2 * cm * 0.92
+    label_dims = (20, 20) * mm
+    margins = (10, 10) * mm
+    gaps = (10, 10) * mm
+    procs_per_page = int(pagesize[1] / (label_dims[1]
+                                        + 2 * margins[1] + gaps[1]))
 
-    # filter processes
     # make rows
     for i, process in enumerate(processes.keys()):
-        start_bc = createBarcodeDrawing(encoder,
-                                        **dict(value=start_format.format(process),
-                                               height=(label_height - height) * 0.92,
-                                               width=label_width
-                                        ))
-        end_bc = createBarcodeDrawing(encoder,
-                                           **dict(value=end_format.format(process),
-                                                  height=(label_height - height) * 0.92,
-                                                  width=label_width
-                             )
-        )
+        row_pos = i * label_dims[1] + margins[1] * 1 if i in (0, procs_per_page) else 0
         style = getSampleStyleSheet()
         # center text and wrap if necessary
         style['Normal'].alignment = 1
+        
+        text = start_format.format(process)
+        p = Paragraph(text, style=style["Normal"])
+        width, height = p.wrapOn(self, *label_dims)
+        p.drawOn(self, margins[0], row_pos)
+        start_bc = createBarcodeDrawing(encoder,
+                                        **dict(value=start_format.format(process),
+                                               height=label_dims[1],
+                                               width=label_dims[0]
+                                        ))
+        start_bc.drawOn(self, margins[0], row_pos[0] + height)
 
-        p = Paragraph(code, style=style["Normal"])
-        width, height = p.wrapOn(self, label_width, label_height * 0.3)
-        # self.drawCentredString(x + label_width / 2, y + label_height - height, code)
-        p.drawOn(self, x, y + label_height - height)
-    
+        text_pos_x = margins[0] + labels_dims[0] + gaps[0]
+        text_pos_y = 0
+        steps_dims = (pagesize[0] - 2 * label_dims[0], label_dims[1] / len(processes[key]))
+        for j, step in processes[key]:
+            text = "%i. %s".format(j, step)
+            p = Paragraph(text, style=style["Normal"])
+            width, height = p.wrapOn(self, *steps_dims)
+            p.drawOn(self, text_pos_x, text_pos_y + row_pos)
+            text_pos_y += height
 
+        end_bc = createBarcodeDrawing(encoder,
+                                      **dict(value=end_format.format(process),
+                                             height=label_height[1],
+                                             width=label_width[0]
+                                      ))
+        end_bc.drawOn(self, pagesize[0] - label_dims[0] - margins[0], row_pos[0])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    def draw_labels(self, codes, encoder, label_height, label_width,
-                    no_labels_x, no_labels_y, x_gap, x_offset, y_gap,
-                    y_offset, show_text=1):
-
-        from reportlab.lib.styles import getSampleStyleSheet
-        from reportlab.platypus import Paragraph
-        from reportlab.graphics import barcode
-
-
-        if show_text==0:
-            height = 0
-        else:
-            from reportlab.platypus import Paragraph
-            from reportlab.lib.styles import getSampleStyleSheet
-            style = getSampleStyleSheet()
-            # center text and wrap if necessary
-            style['Normal'].alignment = 1
-
-
-        for i, code in enumerate(codes):
-            if i % no_labels_x == 0:
-                x = x_offset
-
-            y = y_offset + i / no_labels_x * label_height + i / no_labels_x * y_gap
-
-            if show_text!=0:
-                p = Paragraph(code, style=style["Normal"])
-                width, height = p.wrapOn(self, label_width, label_height * 0.3)
-                # self.drawCentredString(x + label_width / 2, y + label_height - height, code)
-                p.drawOn(self, x, y + label_height - height)
-
-            encoded = barcode.createBarcodeDrawing(encoder,
-                                                   **dict(value=code,
-                                                          height=(label_height - height) * 0.92,
-                                                          width=label_width))
-            # import pdb; pdb.set_trace() 
-            encoded.drawOn(self, x, y)
-            x = x + label_width + x_gap
 
 
 # if __name__ == '__main__':
