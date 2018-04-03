@@ -39,7 +39,6 @@ def main():
         sys.stdout.write('\n\tWould you like to contribute metrics for a certain label paper?\n\tPlease do so at:\n\thttps://github.com/oneyb/reportlab-barcode-recipes')
         sys.exit(0)
 
-
     # import pdb; pdb.set_trace() 
 
     # Reportlab imports

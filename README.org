@@ -18,15 +18,19 @@ git clone https://github.com/oneyb/makebarcode
 cd makebarcode && python setup.py install
 #+END_SRC
 
-*NOTE*: you will need to install it as root, in order to have the following scripts in the system path.
+*NOTE*: you will need to install it as root or as your user (--user), in order to have the following scripts in the system path.
 
 * Usage
-For now, I use this simple python module as such:
-
+For now, I use this simple python module as following.
+*WARNING*: The command accepts python code and executes it. This has plenty of security implications, so use it with caution.
 #+BEGIN_SRC shell
 create_page_of_barcodes.py --codes '["Box{:=04}".format(i) for i in range(no_labels_x * no_labels_y + 1)[1:]]' \
        --encoder Code128 --recipe avery_3475 --filename barcodes.pdf
 #+END_SRC
+A lá:
+#+BEGIN_QUOTE
+UNIX was not designed to stop its users from doing stupid things, as that would also stop them from doing clever things.   -- unknown (generally attributed to a Doug Gwyn, but no information found about him)
+#+END_QUOTE
 
 For single encodings:
 #+BEGIN_SRC shell
