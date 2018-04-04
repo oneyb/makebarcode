@@ -35,7 +35,7 @@ class BarcodeCanvas(canvas.Canvas):
     """
 
     def draw_labels(self, codes, encoder, label_height, label_width,
-                    no_labels_x, no_labels_y, x_gap, x_offset, y_gap,
+                    n_labels_x, n_labels_y, x_gap, x_offset, y_gap,
                     y_offset, show_text=1):
 
         from reportlab.lib.styles import getSampleStyleSheet
@@ -54,10 +54,10 @@ class BarcodeCanvas(canvas.Canvas):
 
 
         for i, code in enumerate(codes):
-            if i % no_labels_x == 0:
+            if i % n_labels_x == 0:
                 x = x_offset
 
-            y = y_offset + i / no_labels_x * label_height + i / no_labels_x * y_gap
+            y = y_offset + i / n_labels_x * label_height + i / n_labels_x * y_gap
 
             if show_text!=0:
                 p = Paragraph(code, style=style["Normal"])

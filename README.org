@@ -24,7 +24,7 @@ cd makebarcode && python setup.py install
 For now, I use this simple python module as following.
 *WARNING*: The command accepts python code and executes it. This has plenty of security implications, so use it with caution.
 #+BEGIN_SRC shell
-create_page_of_barcodes.py --codes '["Box{:=04}".format(i) for i in range(no_labels_x * no_labels_y + 1)[1:]]' \
+create_page_of_barcodes.py --codes '["Box{:=04}".format(i) for i in range(n_labels_x * n_labels_y + 1)[1:]]' \
        --encoder Code128 --recipe avery_3475 --filename barcodes.pdf
 #+END_SRC
 A lá:

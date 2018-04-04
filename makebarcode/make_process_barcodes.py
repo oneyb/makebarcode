@@ -197,8 +197,8 @@ def main():
         from warnings import warn
         warn("The ID to be encoded is not python code. Assuming it's a unique string.", Warning)
         codes = [args.codes
-                 for x in range(recipe.get('no_labels_y') *
-                                recipe.get('no_labels_x'))]
+                 for x in range(recipe.get('n_labels_y') *
+                                recipe.get('n_labels_x'))]
 
     # import pdb; pdb.set_trace
 

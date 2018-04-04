@@ -10,8 +10,8 @@ DATABASE = {
         ,'y_offset':     21.5 * mm 
         ,'x_gap':        0    * mm
         ,'y_gap':        0    * mm
-        ,'no_labels_x':  4
-        ,'no_labels_y':  10
+        ,'n_labels_x':  4
+        ,'n_labels_y':  10
         ,'pagesize':     'A4'
     }
     # Avery 3475
@@ -22,8 +22,8 @@ DATABASE = {
         ,'y_offset':     6.0  * mm 
         ,'x_gap':        0    * mm
         ,'y_gap':        0    * mm
-        ,'no_labels_x':  3
-        ,'no_labels_y':  8
+        ,'n_labels_x':  3
+        ,'n_labels_y':  8
         ,'pagesize':     'A4'
     }
     # Avery L7120
@@ -34,8 +34,8 @@ DATABASE = {
         ,'y_offset':     13.  * mm 
         ,'x_gap':        5.0  * mm
         ,'y_gap':        4.9  * mm
-        ,'no_labels_x':  5
-        ,'no_labels_y':  7
+        ,'n_labels_x':  5
+        ,'n_labels_y':  7
         ,'pagesize':     'A4'
     }
 }
