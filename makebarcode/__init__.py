@@ -56,8 +56,7 @@ class BarcodeCanvas(canvas.Canvas):
         for i, code in enumerate(codes):
             if i % n_labels_x == 0:
                 x = x_offset
-
-            y = y_offset + i / n_labels_x * label_height + i / n_labels_x * y_gap
+                y = y_offset + i / n_labels_x * label_height + i / n_labels_x * y_gap
 
             if show_text!=0:
                 p = Paragraph(code, style=style["Normal"])
