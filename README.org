@@ -91,25 +91,27 @@ Accepted encoders are:
 
 #+end_example
 
-* TODO Implement the following functionality:
-  - [X] better positioning of text below =code=
-  - [X] different paper sizes than A4, which depend on [[file:recipe_database.py][recipe]] 
-  - [X] Complete command line options
-  - [X] implement =python= scripting capabilities/make package
-  - [ ] Allow linking to inventory to rely on pool
-  - [ ] page barcode sequences for traceability work
-    - [ ] filter process inventory
-    - [ ] split up processes per room
-    - [ ] add barcodes for problems
-    - [ ] Add header with info, logo, and versioning
-    - [ ] add watermark
-  - [ ] devise and implement tests
-    - [ ] implement cosmetic test idea: output pdf, convert to image, compare raw image data
-  - [ ] Different output formats for single barcode script
+# * TODO Implement the following functionality:
+#   - [X] better positioning of text below =code=
+#   - [X] different paper sizes than A4, which depend on [[file:recipe_database.py][recipe]] 
+#   - [X] Complete command line options
+#   - [X] implement =python= scripting capabilities/make package
+#   - [ ] Allow linking to inventory to rely on pool
+#   - [ ] page barcode sequences for traceability work
+#     - [ ] filter process inventory
+#     - [ ] split up processes per room
+#     - [ ] add barcodes for problems
+#     - [ ] Add header with info, logo, and versioning
+#     - [ ] add watermark
+#   - [ ] devise and implement tests
+#     - [ ] implement cosmetic test idea: output pdf, convert to image, compare raw image data
+#   - [ ] Different output formats for single barcode script
 
 
-* Contributions, please
+* Future
 
-My ability to design software is underdeveloped and correlates with my
-needs. Please fork this repository or contribute metrics, if you find it
-useful. My previous self would appreciate it.
+This project has been discontinued. I may pick it up given any future needs.
+Please fork this repository, if you find it useful. It is a worthy project in
+my opinion and would definitely be an important building block for a simple
+inventory system at home or elsewhere.
+ 
